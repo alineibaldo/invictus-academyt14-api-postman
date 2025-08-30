@@ -17,7 +17,7 @@ Newman
 
   newman run 1-Login_collection.json -e main_environment.json -g postman_globals.json
  
-  newman run invictus.postman_collection.json -e Enviroment ERP.environment.json -g workspace.postman_globals.json 
+  newman run invictus.postman_collection.json -e invictus.postman_environment.json -g workspace.postman_globals.json 
  
  
 Equipe

@@ -1,0 +1,5362 @@
+{
+	"info": {
+		"_postman_id": "342497c8-5eec-4fc1-baad-6a4766045e63",
+		"name": "invictus",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43663184",
+		"_collection_link": "https://aline-7533971.postman.co/workspace/aline's-Workspace~c604fe72-8115-414c-8e0d-1aff6362918d/collection/43663184-342497c8-5eec-4fc1-baad-6a4766045e63?action=share&source=collection_link&creator=43663184"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "validade token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Testes para validateToken\r",
+									"pm.test(\"Status code is 200\", function() {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response indicates valid token\", function() {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('valid');\r",
+									"    pm.expect(jsonData.valid).to.be.true;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is acceptable\", function() {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(300);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/validateToken",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"validateToken"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login_admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response has token\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"token\");\r",
+									"});\r",
+									"\r",
+									"// Salva o token no ambiente\r",
+									"pm.environment.set(\"TOKEN\", pm.response.json().token);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"mail\": \"{{Admin}}\",\r\n  \"password\": \"{{PasswordAdmin}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login_sem_senha",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400 for missing password\", function() {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"mail\": \"{{Admin}}\",\r\n  \"password\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login_sem_mail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400 for missing email\", function() {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"mail\": \"\",\r\n  \"password\": \"{{PasswordAdmin}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "apikey",
+				"apikey": [
+					{
+						"key": "value",
+						"value": "{{TOKEN}}",
+						"type": "string"
+					},
+					{
+						"key": "key",
+						"value": "Authorization",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "cadastro de usuario",
+					"item": [
+						{
+							"name": "listar usuarios",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Teste: Verifica se o status da resposta é 200 OK\r",
+											"pm.test(\"Status code é 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"// Teste: Verifica se a resposta é um array de usuários\r",
+											"pm.test(\"Resposta é uma lista de usuários\", function () {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData).to.be.an(\"array\");\r",
+											"    pm.expect(jsonData.length).to.be.above(0); // Se espera que haja ao menos 1 usuário\r",
+											"\r",
+											"    // Opcional: Verificar a estrutura do PRIMEIRO usuário no array\r",
+											"    if (jsonData.length > 0) {\r",
+											"        pm.expect(jsonData[0]).to.have.property(\"_id\");\r",
+											"        pm.expect(jsonData[0]).to.have.property(\"fullName\");\r",
+											"        pm.expect(jsonData[0]).to.have.property(\"mail\");\r",
+											"        // ... e outras propriedades que você espera de um objeto de usuário\r",
+											"\r",
+											"        // Salvar dados do primeiro usuário no ambiente (se necessário)\r",
+											"        pm.environment.set(\"userID\", jsonData[0]._id);\r",
+											"        pm.environment.set(\"FirstName\", jsonData[0].firstName || \"\");\r",
+											"        pm.environment.set(\"LastName\", jsonData[0].lastName || \"\");\r",
+											"        pm.environment.set(\"FullName\", jsonData[0].fullName || \"\");\r",
+											"        pm.environment.set(\"CPF\", jsonData[0].cpf || \"\");\r",
+											"        pm.environment.set(\"Mail\", jsonData[0].mail || \"\");\r",
+											"    }\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/user",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "happypath_cadastro",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Extrai o corpo da resposta JSON\r",
+											"const responseJson = pm.response.json();\r",
+											"\r",
+											"// Teste 1: Verificar se a resposta contém o ID do usuário\r",
+											"pm.test(\"ID do usuário é válido\", function () {\r",
+											"    pm.expect(responseJson.user).to.have.property(\"_id\");\r",
+											"    pm.expect(responseJson.user._id).to.be.a('string').and.to.have.lengthOf.above(0);\r",
+											"\r",
+											"    // Salva o ID do usuário no ambiente, caso o teste passe\r",
+											"    pm.environment.set(\"userID\", responseJson.user._id);\r",
+											"});\r",
+											"\r",
+											"// Teste 2: Verificar se a mensagem de sucesso está correta\r",
+											"pm.test(\"Mensagem de sucesso está correta\", function () {\r",
+											"    const fullName = pm.environment.get(\"FullName\"); // Certifique-se de que esta variável está definida\r",
+											"    const expectedMessage = `Olá ${fullName}, cadastro realizado com sucesso.`;\r",
+											"\r",
+											"    // Verifique se a resposta contém o campo 'msg' e se ele corresponde à mensagem esperada\r",
+											"    pm.expect(responseJson.msg).to.eql(expectedMessage);\r",
+											"});\r",
+											"\r",
+											"// Teste 3: Verificar se o email retornado é o mesmo enviado\r",
+											"pm.test(\"Email do usuário corresponde ao email enviado\", function () {\r",
+											"    const expectedEmail = pm.environment.get(\"Mail\");\r",
+											"    pm.expect(responseJson.user.mail).to.eql(expectedEmail);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"function firstname() {\r",
+											"    const names = ['Alice', 'Miguel', 'Sophia', 'Giovana', 'Arthur', 'Douglas', 'Gustavo', 'Jose'];\r",
+											"    const randomName = names[Math.floor(Math.random() * names.length)];\r",
+											"    return randomName;\r",
+											"}\r",
+											"\r",
+											"function lastname() {\r",
+											"    const lastnames = ['Viana', 'Santos', 'Fernandes', 'Costa', 'Silveira', 'Gonçalves', 'Silva', 'Sousa'];\r",
+											"    const randomLastName = lastnames[Math.floor(Math.random() * lastnames.length)];\r",
+											"    return randomLastName;\r",
+											"}\r",
+											"\r",
+											"function randomCpf() {\r",
+											"    let randomCpf = '';\r",
+											"    for (let i = 0; i < 11; i++) {\r",
+											"        randomCpf += Math.floor(Math.random() * 10).toString();\r",
+											"    }\r",
+											"    return randomCpf;\r",
+											"}\r",
+											"\r",
+											"function shuffleString(str) {\r",
+											"    return str.split(\"\").sort(() => Math.random() - 0.5).join(\"\");\r",
+											"}\r",
+											"\r",
+											"function generatePassword() {\r",
+											"    const chars = \"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%\";\r",
+											"    const comprimentoMinimo = 8;\r",
+											"    const comprimentoMaximo = 12;\r",
+											"    let senhaArray = [];\r",
+											"\r",
+											"    senhaArray.push(chars[Math.floor(Math.random() * 26)]);   // Letra maiúscula\r",
+											"    senhaArray.push(chars[26 + Math.floor(Math.random() * 26)]); // Letra minúscula\r",
+											"    senhaArray.push(chars[52 + Math.floor(Math.random() * 10)]); // Número\r",
+											"    senhaArray.push(chars[62 + Math.floor(Math.random() * 4)]);  // Símbolo especial\r",
+											"\r",
+											"    const restante = comprimentoMinimo + Math.floor(Math.random() * (comprimentoMaximo - comprimentoMinimo + 1)) - senhaArray.length;\r",
+											"\r",
+											"    for (let i = 0; i < restante; i++) {\r",
+											"        senhaArray.push(chars[Math.floor(Math.random() * chars.length)]);\r",
+											"    }\r",
+											"\r",
+											"    return shuffleString(senhaArray.join(\"\"));\r",
+											"}\r",
+											"\r",
+											"function gerarEmail() {\r",
+											"    const nomes = [\"joao\", \"maria\", \"carlos\", \"ana\", \"lucas\", \"mariana\", \"fernando\", \"juliana\", \"paulo\", \"lara\"];\r",
+											"    const sobrenomes = [\"silva\", \"souza\", \"oliveira\", \"pereira\", \"costa\", \"almeida\", \"ferreira\", \"gomes\", \"rodrigues\", \"barbosa\"];\r",
+											"    const dominios = [\"gmail.com\", \"hotmail.com\", \"email.com\", \"teste.com.br\", \"qacoders.com\"];\r",
+											"\r",
+											"    const nome = nomes[Math.floor(Math.random() * nomes.length)];\r",
+											"    const sobrenome = sobrenomes[Math.floor(Math.random() * sobrenomes.length)];\r",
+											"    const numeroAleatorio = Math.floor(Math.random() * 1000);\r",
+											"    const dominio = dominios[Math.floor(Math.random() * dominios.length)];\r",
+											"\r",
+											"    return `${nome}.${sobrenome}${numeroAleatorio}@${dominio}`;\r",
+											"}\r",
+											"\r",
+											"// Gerar valores\r",
+											"const firstName = firstname();\r",
+											"const lastName = lastname();\r",
+											"const fullName = `${firstName} ${lastName}`;\r",
+											"const cpf = randomCpf();\r",
+											"const password = generatePassword();\r",
+											"const email = gerarEmail();\r",
+											"\r",
+											"// Setar variáveis no ambiente do Postman\r",
+											"pm.environment.set(\"FirstName\", firstName);\r",
+											"pm.environment.set(\"LastName\", lastName);\r",
+											"pm.environment.set(\"FullName\", fullName);\r",
+											"pm.environment.set(\"CPF\", cpf);\r",
+											"pm.environment.set(\"passUser\", password);\r",
+											"pm.environment.set(\"Mail\", email);\r",
+											"\r",
+											"// Log de teste (opcional)\r",
+											"console.log(\"Usuário gerado:\", {\r",
+											"    fullName,\r",
+											"    email,\r",
+											"    cpf,\r",
+											"    password\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fullName\": \"{{FullName}}\",\r\n  \"mail\": \"{{mail}}\",\r\n  \"accessProfile\": \"ADMIN\",\r\n  \"cpf\": \"{{CPF}}\",\r\n  \"password\": \"1234@Teste\",\r\n  \"confirmPassword\": \"1234@Teste\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/user",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "cadastrar sem perfil de ADMIN",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {\r",
+											"\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"// Teste 2: Verificar a mensagem de erro específica para 'perfil de acesso'\r",
+											"pm.test(\"O campo perfil de acesso deve ser preenchido de acordo com o seu cargo exemplo: ADMIN.\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    \r",
+											"    // A mensagem de erro esperada\r",
+											"    const expectedErrorMessage = \"O campo perfil de acesso deve ser preenchido de acordo com o seu cargo exemplo: ADMIN.\";\r",
+											"\r",
+											"    // Verificar se o erro retornado está no array e se é igual à mensagem esperada\r",
+											"    pm.expect(jsonData.error).to.be.an('array').that.includes(expectedErrorMessage);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fullName\": \"Maria da Silveira\",\r\n  \"mail\": \"maria3@teste.com.br\",\r\n  \"accessProfile\": \"USER\",\r\n  \"cpf\": \"95142373088\",\r\n  \"password\": \"1234@Teste\",\r\n  \"confirmPassword\": \"1234@Teste\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/user",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "cadastrar_sem_nome",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {\r",
+											"\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"// Teste 1: Verificar se o código de status é 400\r",
+											"pm.test(\"Status code is 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"// Teste 2: Verificar se a mensagem de erro está correta para falta de nome completo\r",
+											"pm.test(\"O campo nome completo é obrigatório.\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"\r",
+											"    // Mensagem de erro esperada\r",
+											"    const expectedErrorMessage = \"O campo nome completo é obrigatório.\";\r",
+											"\r",
+											"    // Verificar se a mensagem de erro está no array\r",
+											"    pm.expect(jsonData.error).to.be.an('array').that.includes(expectedErrorMessage);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fullName\": \"\",\r\n  \"mail\": \"maria3@teste.com.br\",\r\n  \"accessProfile\": \"ADMIN\",\r\n  \"cpf\": \"95142373088\",\r\n  \"password\": \"1234@Teste\",\r\n  \"confirmPassword\": \"1234@Teste\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/user",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "cadastrar_sem_sobrenome",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {\r",
+											"\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"// Teste 1: Verificar se o código de status é 400\r",
+											"pm.test(\"Status code is 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"// Teste 2: Verificar se a mensagem de erro está correta para falta de sobrenome\r",
+											"pm.test(\"Informe o nome e sobrenome com as iniciais em letra maiúscula e sem caracteres especiais.\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"\r",
+											"    // Mensagem de erro esperada\r",
+											"    const expectedErrorMessage = \"Informe o nome e sobrenome com as iniciais em letra maiúscula e sem caracteres especiais.\";\r",
+											"\r",
+											"    // Verificar se a mensagem de erro está no array\r",
+											"    pm.expect(jsonData.error).to.be.an('array').that.includes(expectedErrorMessage);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fullName\": \"Aline\",\r\n  \"mail\": \"test.aline@test.com.br\",\r\n  \"accessProfile\": \"ADMIN\",\r\n  \"cpf\": \"11122233399\",\r\n  \"password\": \"4567@Test\",\r\n  \"confirmPassword\": \"4567@Test\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/user",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "cadastrar_nome_101_caracteres",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {\r",
+											"\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"// Teste 2: Verificar se a mensagem de erro está correta para nome com mais de 100 caracteres\r",
+											"pm.test(\"O nome completo deve ter no máximo 100 caracteres.\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"\r",
+											"    // Mensagem de erro esperada\r",
+											"    const expectedErrorMessage = \"O nome completo deve ter no máximo 100 caracteres.\";\r",
+											"\r",
+											"    // Verificar se a mensagem de erro está no array\r",
+											"    pm.expect(jsonData.error).to.be.an('array').that.includes(expectedErrorMessage);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fullName\": \"Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab\",\r\n  \"mail\": \"testee.aline@test.com.br\",\r\n  \"accessProfile\": \"ADMIN\",\r\n  \"cpf\": \"11122233399\",\r\n  \"password\": \"4567@Test\",\r\n  \"confirmPassword\": \"4567@Test\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/user",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "cadastrar_nome_numeros",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {\r",
+											"\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"// Teste 2: Verificar se a mensagem de erro está correta para nome contendo números\r",
+											"pm.test(\"O campo nome completo não deve conter números\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"\r",
+											"    // Mensagem de erro esperada\r",
+											"    const expectedErrorMessage = \"O campo nome completo não deve conter números\";\r",
+											"\r",
+											"    // Verificar se a mensagem de erro está no array\r",
+											"    pm.expect(jsonData.error).to.be.an('array').that.includes(expectedErrorMessage);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fullName\": \"Aline 1234\",\r\n  \"mail\": \"test.aline@test.com.br\",\r\n  \"accessProfile\": \"ADMIN\",\r\n  \"cpf\": \"11122233399\",\r\n  \"password\": \"4567@Test\",\r\n  \"confirmPassword\": \"4567@Test\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/user",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "cadastro_sem_email",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {\r",
+											"\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"O campo e-mail é obrigatório.\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"\r",
+											"    const expectedErrorMessage = \"O campo e-mail é obrigatório.\";\r",
+											"\r",
+											"\r",
+											"    pm.expect(jsonData.error).to.be.an('array').that.includes(expectedErrorMessage);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fullName\": \"Aline Goncalves\",\r\n  \"mail\": \"\",\r\n  \"accessProfile\": \"ADMIN\",\r\n  \"cpf\": \"11122233399\",\r\n  \"password\": \"4567@Test\",\r\n  \"confirmPassword\": \"4567@Test\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/user",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "cadastro_email_formato_diferente",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {\r",
+											"\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"// Teste 2: Verificar se a mensagem de erro está correta para e-mail no formato errado\r",
+											"pm.test(\"O e-mail informado é inválido. Informe um e-mail no formato [nome@domínio.com].\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"\r",
+											"    // Mensagem de erro esperada\r",
+											"    const expectedErrorMessage = \"O e-mail informado é inválido. Informe um e-mail no formato [nome@domínio.com].\";\r",
+											"\r",
+											"    // Verificar se a mensagem de erro está no array\r",
+											"    pm.expect(jsonData.error).to.be.an('array').that.includes(expectedErrorMessage);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fullName\": \"Aline Goncalves\",\r\n  \"mail\": \"@teste.com.br\",\r\n  \"accessProfile\": \"ADMIN\",\r\n  \"cpf\": \"11122233399\",\r\n  \"password\": \"4567@Test\",\r\n  \"confirmPassword\": \"4567@Test\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/user",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "cadastro_email_espaco",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {\r",
+											"\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"// Teste 2: Verificar se a mensagem de erro está correta para e-mail com espaços\r",
+											"pm.test(\"O e-mail informado é inválido. Informe um e-mail no formato [nome@domínio.com].\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"\r",
+											"    // Mensagem de erro esperada\r",
+											"    const expectedErrorMessage = \"O e-mail informado é inválido. Informe um e-mail no formato [nome@domínio.com].\";\r",
+											"\r",
+											"    // Verificar se a mensagem de erro está no array\r",
+											"    pm.expect(jsonData.error).to.be.an('array').that.includes(expectedErrorMessage);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fullName\": \"Aline Goncalves\",\r\n  \"mail\": \"aline @teste.com.br\",\r\n  \"accessProfile\": \"ADMIN\",\r\n  \"cpf\": \"11122233399\",\r\n  \"password\": \"4567@Test\",\r\n  \"confirmPassword\": \"4567@Test\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/user",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "cadastro_sem_senha",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {\r",
+											"\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"// Teste 2: Verificar se as mensagens de erro estão corretas para senha e confirmação de senha vazios\r",
+											"pm.test(\"O campo senha é obrigatório e O campo de confirmação de senha é obrigatório.\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"\r",
+											"    // Mensagens de erro esperadas\r",
+											"    const expectedErrorMessages = [\r",
+											"        \"O campo senha é obrigatório\",\r",
+											"        \"O campo de confirmação de senha é obrigatório.\"\r",
+											"    ];\r",
+											"\r",
+											"    // Verificar se as mensagens de erro estão no array\r",
+											"    pm.expect(jsonData.error).to.be.an('array').that.includes.members(expectedErrorMessages);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fullName\": \"Aline Goncalves\",\r\n  \"mail\": \"alinegoncalves@teste.com.br\",\r\n  \"accessProfile\": \"ADMIN\",\r\n  \"cpf\": \"11122233377\",\r\n  \"password\": \"\",\r\n  \"confirmPassword\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/user",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "cadastro_confirmarsenha_diferente_senha",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {\r",
+											"\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"// Teste 2: Verificar se a mensagem de erro está correta para senhas diferentes\r",
+											"pm.test(\"As senhas não conferem.\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"\r",
+											"    // Mensagem de erro esperada\r",
+											"    const expectedErrorMessage = \"As senhas não conferem.\";\r",
+											"\r",
+											"    // Verificar se a mensagem de erro está no array\r",
+											"    pm.expect(jsonData.error).to.be.an('array').that.includes(expectedErrorMessage);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fullName\": \"Aline Goncalves\",\r\n  \"mail\": \"alinegoncalves@teste.com.br\",\r\n  \"accessProfile\": \"ADMIN\",\r\n  \"cpf\": \"11122233377\",\r\n  \"password\": \"4567@Test\",\r\n  \"confirmPassword\": \"4567@Testee\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/user",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"user"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "editar cadastro usuario",
+					"item": [
+						{
+							"name": "login-admin-de-novo",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response has token\", function () {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData).to.have.property(\"token\");\r",
+											"});\r",
+											"\r",
+											"// Salva o token no ambiente\r",
+											"pm.environment.set(\"TOKEN\", pm.response.json().token);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "Authorization",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"mail\": \"{{Admin}}\",\r\n    \"password\": \"{{PasswordAdmin}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/login",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "login com usuario",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Teste 1: Verificar se o código de status é 200\r",
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"// Teste 2: Verificar se a resposta contém um token\r",
+											"pm.test(\"Response has token\", function () {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData).to.have.property(\"token\");\r",
+											"    \r",
+											"    // Salva o token no ambiente\r",
+											"    pm.environment.set(\"TOKEN\", jsonData.token);\r",
+											"});\r",
+											"\r",
+											"// Teste 3: Verificar se a mensagem de sucesso está correta\r",
+											"pm.test(\"Mensagem de sucesso está correta\", function () {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    \r",
+											"    // Extrai o fullName diretamente da resposta\r",
+											"    const fullNameFromResponse = jsonData.user.fullName;\r",
+											"    \r",
+											"    // Construa a mensagem esperada com o fullName da resposta\r",
+											"    const expectedMessage = `Olá ${fullNameFromResponse}, autenticação autorizada com sucesso!`;\r",
+											"\r",
+											"    // Verifica se a mensagem de sucesso está na resposta\r",
+											"    pm.expect(jsonData.msg).to.eql(expectedMessage);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "Authorization",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"mail\": \"mariamaria@teste.com.br\",\r\n    \"password\": \"1234@Teste\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/login",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "lista usuarios",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Teste: Verifica se o status da resposta é 200 OK\r",
+											"pm.test(\"Status code é 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"// Teste: Verifica se a resposta é um array de usuários\r",
+											"pm.test(\"Resposta é uma lista de usuários\", function () {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData).to.be.an(\"array\");\r",
+											"    pm.expect(jsonData.length).to.be.above(0); // Se espera que haja ao menos 1 usuário\r",
+											"\r",
+											"    // Opcional: Verificar a estrutura do PRIMEIRO usuário no array\r",
+											"    if (jsonData.length > 0) {\r",
+											"        pm.expect(jsonData[0]).to.have.property(\"_id\");\r",
+											"        pm.expect(jsonData[0]).to.have.property(\"fullName\");\r",
+											"        pm.expect(jsonData[0]).to.have.property(\"mail\");\r",
+											"        // ... e outras propriedades que você espera de um objeto de usuário\r",
+											"\r",
+											"        // Salvar dados do primeiro usuário no ambiente (se necessário)\r",
+											"        pm.environment.set(\"userID\", jsonData[0]._id);\r",
+											"        pm.environment.set(\"FirstName\", jsonData[0].firstName || \"\");\r",
+											"        pm.environment.set(\"LastName\", jsonData[0].lastName || \"\");\r",
+											"        pm.environment.set(\"FullName\", jsonData[0].fullName || \"\");\r",
+											"        pm.environment.set(\"CPF\", jsonData[0].cpf || \"\");\r",
+											"        pm.environment.set(\"Mail\", jsonData[0].mail || \"\");\r",
+											"    }\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/user",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "usuarios count",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"/// Teste: Verifica se o status da resposta é 200 OK\r",
+											"pm.test(\"Status code é 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"// Teste: Verifica se a resposta contém a propriedade 'count' e se é um número\r",
+											"pm.test(\"Resposta contém o número de usuários\", function () {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    \r",
+											"    // Verifica se a resposta contém a propriedade 'count'\r",
+											"    pm.expect(jsonData).to.have.property(\"count\");\r",
+											"    \r",
+											"    // Verifica se 'count' é um número\r",
+											"    pm.expect(jsonData.count).to.be.a('number');\r",
+											"    \r",
+											"    // Opcional: Verifica se o número de usuários é maior que zero\r",
+											"    pm.expect(jsonData.count).to.be.above(0); // Isso assume que há pelo menos 1 usuário cadastrado\r",
+											"});\r",
+											"\r",
+											"// Teste: Salvar o número de usuários no ambiente (opcional)\r",
+											"pm.environment.set(\"userCount\", pm.response.json().count);\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/user/count",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"user",
+										"count"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get por id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Recupera o ID do usuário armazenado na variável de ambiente\r",
+											"const userID = pm.environment.get(\"userID\");\r",
+											"\r",
+											"// Teste: Verifica se o status da resposta é 200 OK\r",
+											"pm.test(\"Status code é 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"// Teste: Verifica se a resposta contém os dados do usuário\r",
+											"pm.test(\"Resposta contém dados do usuário\", function () {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    \r",
+											"    // Verifica se a resposta contém o ID do usuário\r",
+											"    pm.expect(jsonData).to.have.property(\"_id\").that.equals(userID);\r",
+											"    \r",
+											"    // Verifica se a resposta contém o nome completo\r",
+											"    pm.expect(jsonData).to.have.property(\"fullName\");\r",
+											"    \r",
+											"    // Verifica se a resposta contém o e-mail\r",
+											"    pm.expect(jsonData).to.have.property(\"mail\");\r",
+											"    \r",
+											"    // Verifica outras propriedades, conforme necessário\r",
+											"    pm.expect(jsonData).to.have.property(\"accessProfile\");\r",
+											"    pm.expect(jsonData).to.have.property(\"cpf\");\r",
+											"    pm.expect(jsonData).to.have.property(\"status\");\r",
+											"\r",
+											"    // Opcional: Salvar outros dados do usuário no ambiente, se necessário\r",
+											"    pm.environment.set(\"userFullName\", jsonData.fullName);\r",
+											"    pm.environment.set(\"userMail\", jsonData.mail);\r",
+											"});\r",
+											"\r",
+											"// Teste opcional: Verificar se o ID retornado é válido\r",
+											"pm.test(\"ID do usuário retornado é válido\", function () {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData._id).to.be.a(\"string\").that.is.not.empty;\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/user/{{userID}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"user",
+										"{{userID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "editar_cadastro_por_id",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fullName\": \"Test Test\",\r\n  \"mail\": \"test@test.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/user/68571fcbac90052c2dceaec1?token={{TOKEN}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"user",
+										"68571fcbac90052c2dceaec1"
+									],
+									"query": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "editando_cadastro_sem_nome",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fullName\": \"\",\r\n  \"mail\": \"test@test.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/user/68571fcbac90052c2dceaec1",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"user",
+										"68571fcbac90052c2dceaec1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "editando_cadastro_nome_numero",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fullName\": \"1234 1234\",\r\n  \"mail\": \"test@test.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/user/68571fcbac90052c2dceaec1",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"user",
+										"68571fcbac90052c2dceaec1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "editando_cadastro_um_nome",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fullName\": \"Aline\",\r\n  \"mail\": \"test@test.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/user/68571fcbac90052c2dceaec1",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"user",
+										"68571fcbac90052c2dceaec1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "editando_nome_maior_100_carac",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fullName\": \"Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa Bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\",\r\n  \"mail\": \"test@test.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/user/68571fcbac90052c2dceaec1",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"user",
+										"68571fcbac90052c2dceaec1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "editando_cadastro_sem_email",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\r\n\"fullName\": \"Test Test\",\r\n\"mail\": \"\"\r\n}\r\n       ",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/user/68571fcbac90052c2dceaec1",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"user",
+										"68571fcbac90052c2dceaec1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "editando_email_formato_errado",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\r\n\"fullName\": \"Test Test\",\r\n\"mail\": \"@aline.com.br\"\r\n}\r\n       ",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/user/68571fcbac90052c2dceaec1",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"user",
+										"68571fcbac90052c2dceaec1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "editando_email_com_espaco",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\r\n\"fullName\": \"Test Test\",\r\n\"mail\": \"@aline.com.br\"\r\n}\r\n       "
+								},
+								"url": {
+									"raw": "{{URL}}/user/68571fcbac90052c2dceaec1",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"user",
+										"68571fcbac90052c2dceaec1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "editando_password_por id",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"password\": \"4567@Test\",\r\n  \"confirmPassword\": \"6789@Test\"\r\n}\r\n       ",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/user/password/68571fcbac90052c2dceaec1",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"user",
+										"password",
+										"68571fcbac90052c2dceaec1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "editando_password_por_id_senhas_diferentes",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"password\": \"1234@Test\",\r\n  \"confirmPassword\": \"6789@Test\"\r\n}\r\n       ",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/user/password/68571fcbac90052c2dceaec1",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"user",
+										"password",
+										"68571fcbac90052c2dceaec1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "editando_password_com_vazio",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"password\": \"\",\r\n  \"confirmPassword\": \"6789@Test\"\r\n}\r\n       ",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/user/password/68571fcbac90052c2dceaec1",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"user",
+										"password",
+										"68571fcbac90052c2dceaec1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "editando_status_usuario_por_id",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"status\": true\r\n}  ",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/user/status/68571fcbac90052c2dceaec1",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"user",
+										"status",
+										"68571fcbac90052c2dceaec1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "editando_status_dado_incorreto",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"status\":\"ok\"\r\n}  ",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/user/status/68571fcbac90052c2dceaec1",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"user",
+										"status",
+										"68571fcbac90052c2dceaec1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Company",
+			"item": [
+				{
+					"name": "login_admin Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response has token\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"token\");\r",
+									"});\r",
+									"\r",
+									"// Salva o token no ambiente\r",
+									"pm.environment.set(\"TOKEN\", pm.response.json().token);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"mail\": \"{{Admin}}\",\r\n  \"password\": \"{{PasswordAdmin}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "listar empresas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/company",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "listar empresas por id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/company",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cadastrar empresa",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Função para gerar CNPJ fake (14 dígitos numéricos)\r",
+									"function gerarCNPJ() {\r",
+									"  let cnpj = '';\r",
+									"  for (let i = 0; i < 14; i++) {\r",
+									"    cnpj += Math.floor(Math.random() * 10);\r",
+									"  }\r",
+									"  return cnpj;\r",
+									"}\r",
+									"\r",
+									"// Define variáveis para cadastro da empresa\r",
+									"pm.environment.set(\"RegisterCompany\", gerarCNPJ());\r",
+									"pm.environment.set(\"corporateName\", \"Empresa Postmannn\");\r",
+									"pm.environment.set(\"mail\", \"contatopostman@empresateste.com\");\r",
+									"pm.environment.set(\"matriz\", \"Matriz2\");\r",
+									"pm.environment.set(\"responsibleContact\", \"Mariaana Silva\");\r",
+									"pm.environment.set(\"telephone\", \"5511999999995\");\r",
+									"pm.environment.set(\"serviceDescription\", \"Serviços gerais\");\r",
+									"\r",
+									"// Monta o endereço em formato array JSON e salva como string no environment\r",
+									"const endereco = [\r",
+									"  {\r",
+									"    zipCode: \"04777002\",\r",
+									"    street: \"Avenida Interlagos\",\r",
+									"    number: \"1234567891\",\r",
+									"    complement: \"Sala 101\",\r",
+									"    district: \"Jardim Marajoara\",\r",
+									"    city: \"SÃO PAULO\",\r",
+									"    state: \"SP\",\r",
+									"    country: \"BRASIL\"\r",
+									"  }\r",
+									"];\r",
+									"\r",
+									"pm.environment.set(\"Address\", JSON.stringify(endereco));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 Created\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"let jsonData;\r",
+									"try {\r",
+									"    jsonData = pm.response.json();\r",
+									"} catch(e) {\r",
+									"    pm.test(\"Response body is valid JSON\", () => { throw e; });\r",
+									"    return;\r",
+									"}\r",
+									"\r",
+									"// Novo objeto da empresa retornado\r",
+									"const company = jsonData.newCompany;\r",
+									"\r",
+									"// Salva o ID da empresa no ambiente\r",
+									"if (company && company._id) {\r",
+									"    pm.environment.set(\"companyID\", company._id);\r",
+									"    console.log(\"companyID salvo:\", company._id);\r",
+									"} else {\r",
+									"    console.warn(\"companyID não encontrado.\");\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Response contém ID da empresa\", function () {\r",
+									"    pm.expect(company).to.have.property(\"_id\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Corporate name corresponde\", function () {\r",
+									"    pm.expect(company.corporateName).to.eql(pm.environment.get(\"corporateName\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"CNPJ corresponde\", function () {\r",
+									"    pm.expect(company.registerCompany).to.eql(pm.environment.get(\"RegisterCompany\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Email corresponde\", function () {\r",
+									"    pm.expect(company.mail).to.eql(pm.environment.get(\"mail\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Matriz corresponde\", function () {\r",
+									"    pm.expect(company.matriz).to.eql(pm.environment.get(\"matriz\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Responsável corresponde\", function () {\r",
+									"    pm.expect(company.responsibleContact).to.eql(pm.environment.get(\"responsibleContact\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Telefone corresponde\", function () {\r",
+									"    pm.expect(company.telephone).to.eql(pm.environment.get(\"telephone\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Descrição corresponde\", function () {\r",
+									"    pm.expect(company.serviceDescription).to.eql(pm.environment.get(\"serviceDescription\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Endereço é array e possui dados\", function () {\r",
+									"    pm.expect(company.address).to.be.an(\"array\").that.is.not.empty;\r",
+									"});\r",
+									"\r",
+									"// Comparação dos dados de endereço\r",
+									"if (company.address && company.address.length > 0) {\r",
+									"    const enderecoResp = company.address[0];\r",
+									"    const enderecoEnv = JSON.parse(pm.environment.get(\"Address\"))[0];\r",
+									"\r",
+									"    pm.test(\"Endereço: CEP corresponde\", function () {\r",
+									"        pm.expect(enderecoResp.zipCode).to.eql(enderecoEnv.zipCode);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Endereço: Rua corresponde\", function () {\r",
+									"        pm.expect(enderecoResp.street).to.eql(enderecoEnv.street);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Endereço: Número corresponde\", function () {\r",
+									"        pm.expect(enderecoResp.number).to.eql(enderecoEnv.number);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Endereço: Complemento corresponde\", function () {\r",
+									"        pm.expect(enderecoResp.complement).to.eql(enderecoEnv.complement);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Endereço: Bairro corresponde\", function () {\r",
+									"        pm.expect(enderecoResp.district).to.eql(enderecoEnv.district);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Endereço: Cidade corresponde\", function () {\r",
+									"        pm.expect(enderecoResp.city).to.eql(enderecoEnv.city);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Endereço: Estado corresponde\", function () {\r",
+									"        pm.expect(enderecoResp.state).to.eql(enderecoEnv.state);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Endereço: País corresponde\", function () {\r",
+									"        pm.expect(enderecoResp.country).to.eql(enderecoEnv.country);\r",
+									"    });\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \"{{corporateName}}\",\r\n  \"registerCompany\": \"{{RegisterCompany}}\",\r\n  \"mail\": \"{{mail}}\",\r\n  \"matriz\": \"{{matriz}}\",\r\n  \"responsibleContact\": \"{{responsibleContact}}\",\r\n  \"telephone\": \"{{telephone}}\",\r\n  \"serviceDescription\": \"{{serviceDescription}}\",\r\n  \"address\": {{Address}}\r\n}\r\n\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/company",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "nome obrigatório",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "Authorization",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \"\",\r\n  \"registerCompany\": \"12126456000188\",\r\n  \"mail\": \"empresa@test.com\",\r\n  \"matriz\": \"Teste\",\r\n  \"responsibleContact\": \"Marcia Silva\",\r\n  \"telephone\": \"99999999999998\",\r\n  \"serviceDescription\": \"Testes\",\r\n  \"address\": [\r\n    {\r\n      \"zipCode\": \"04777001\",\r\n      \"city\": \"São Paulo\",\r\n      \"state\": \"SP\",\r\n      \"district\": \"Rua das Flores\",\r\n      \"street\": \"Avenida Interlagos\",\r\n      \"number\": \"100\",\r\n      \"complement\": \"de 4503 ao fim - lado ímpar\",\r\n      \"country\": \"Brasil\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/company",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "nome max 100 caracteres",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Função para gerar CNPJ válido (fake)\r",
+									"function gerarCNPJ() {\r",
+									"  let cnpj = '';\r",
+									"  for (let i = 0; i < 14; i++) {\r",
+									"    cnpj += Math.floor(Math.random() * 10);\r",
+									"  }\r",
+									"  return cnpj;\r",
+									"}\r",
+									"\r",
+									"// Nome da empresa com mais de 100 caracteres\r",
+									"let nomeLongo = 'Empresa Teste com Nome Muito Longo Que Ultrapassa O Limite de Caracteres Permitido e Ainda Continua Crescendo Sem Parar';\r",
+									"\r",
+									"pm.environment.set(\"corporateName\", nomeLongo);\r",
+									"pm.environment.set(\"RegisterCompany\", gerarCNPJ());\r",
+									"pm.environment.set(\"mail\", \"excedente@empresa.com\");\r",
+									"pm.environment.set(\"matriz\", \"Matriz Extra\");\r",
+									"pm.environment.set(\"responsibleContact\", \"Nome Responsável\");\r",
+									"pm.environment.set(\"telephone\", \"5511988887777\");\r",
+									"pm.environment.set(\"serviceDescription\", \"Serviços completos e diversos\");\r",
+									"\r",
+									"// Endereço como JSON string\r",
+									"const endereco = [\r",
+									"  {\r",
+									"    zipCode: \"04567900\",\r",
+									"    street: \"Rua Nome Longo\",\r",
+									"    number: \"8884567890\",\r",
+									"    complement: \"Sala 1001\",\r",
+									"    district: \"Bairro Exemplo\",\r",
+									"    city: \"SÃO PAULO\",\r",
+									"    state: \"SP\",\r",
+									"    country: \"BRASIL\"\r",
+									"  }\r",
+									"];\r",
+									"pm.environment.set(\"Address\", JSON.stringify(endereco));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code é 400 - Bad Request\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Mensagem de erro: nome com mais de 100 caracteres\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"error\").that.is.an(\"array\");\r",
+									"    pm.expect(jsonData.error).to.include(\"O campo 'Nome da empresa' deve ter no máximo 100 caracteres.\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "Authorization",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \"{{corporateName}}\",\r\n  \"registerCompany\": \"{{RegisterCompany}}\",\r\n  \"mail\": \"{{mail}}\",\r\n  \"matriz\": \"{{matriz}}\",\r\n  \"responsibleContact\": \"{{responsibleContact}}\",\r\n  \"telephone\": \"{{telephone}}\",\r\n  \"serviceDescription\": \"{{serviceDescription}}\",\r\n  \"address\": {{Address}}\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/company",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Nome é alfanumérico",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "Authorization",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \"Aline _1234\",\r\n  \"registerCompany\": \"12126456000188\",\r\n  \"mail\": \"empresa@test.com\",\r\n  \"matriz\": \"Teste\",\r\n  \"responsibleContact\": \"Marcia Silva\",\r\n  \"telephone\": \"99999999999998\",\r\n  \"serviceDescription\": \"Testes\",\r\n  \"address\": [\r\n    {\r\n      \"zipCode\": \"04777001\",\r\n      \"city\": \"São Paulo\",\r\n      \"state\": \"SP\",\r\n      \"district\": \"Rua das Flores\",\r\n      \"street\": \"Avenida Interlagos\",\r\n      \"number\": \"100\",\r\n      \"complement\": \"de 4503 ao fim - lado ímpar\",\r\n      \"country\": \"Brasil\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/company",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "duplicidade",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "Authorization",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \"Empresa Teste 3443\",\r\n  \"registerCompany\": \"12126456000188\",\r\n  \"mail\": \"empresa@test.com\",\r\n  \"matriz\": \"Teste\",\r\n  \"responsibleContact\": \"Marcia Silva\",\r\n  \"telephone\": \"99999999999998\",\r\n  \"serviceDescription\": \"Testes\",\r\n  \"address\": [\r\n    {\r\n      \"zipCode\": \"04777001\",\r\n      \"city\": \"São Paulo\",\r\n      \"state\": \"SP\",\r\n      \"district\": \"Rua das Flores\",\r\n      \"street\": \"Avenida Interlagos\",\r\n      \"number\": \"100\",\r\n      \"complement\": \"de 4503 ao fim - lado ímpar\",\r\n      \"country\": \"Brasil\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/company",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cnpj numero obrigatorio",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "Authorization",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \"Empresa 1\",\r\n  \"registerCompany\": \"\",\r\n  \"mail\": \"empresa@test.com\",\r\n  \"matriz\": \"Teste\",\r\n  \"responsibleContact\": \"Marcia Silva\",\r\n  \"telephone\": \"99999999999998\",\r\n  \"serviceDescription\": \"Testes\",\r\n  \"address\": [\r\n    {\r\n      \"zipCode\": \"04777001\",\r\n      \"city\": \"São Paulo\",\r\n      \"state\": \"SP\",\r\n      \"district\": \"Rua das Flores\",\r\n      \"street\": \"Avenida Interlagos\",\r\n      \"number\": \"100\",\r\n      \"complement\": \"de 4503 ao fim - lado ímpar\",\r\n      \"country\": \"Brasil\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/company",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cnpj somente numeros",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "Authorization",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \"Empresa 1\",\r\n  \"registerCompany\": \"121264560001aa\",\r\n  \"mail\": \"empresa@test.com\",\r\n  \"matriz\": \"Teste\",\r\n  \"responsibleContact\": \"Marcia Silva\",\r\n  \"telephone\": \"99999999999998\",\r\n  \"serviceDescription\": \"Testes\",\r\n  \"address\": [\r\n    {\r\n      \"zipCode\": \"04777001\",\r\n      \"city\": \"São Paulo\",\r\n      \"state\": \"SP\",\r\n      \"district\": \"Rua das Flores\",\r\n      \"street\": \"Avenida Interlagos\",\r\n      \"number\": \"100\",\r\n      \"complement\": \"de 4503 ao fim - lado ímpar\",\r\n      \"country\": \"Brasil\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/company",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cnpj duplicidade",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "Authorization",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \"Empresa 1\",\r\n  \"registerCompany\": \"52541723000100\",\r\n  \"mail\": \"empresa@test.com\",\r\n  \"matriz\": \"Teste\",\r\n  \"responsibleContact\": \"Marcia Silva\",\r\n  \"telephone\": \"99999999999998\",\r\n  \"serviceDescription\": \"Testes\",\r\n  \"address\": [\r\n    {\r\n      \"zipCode\": \"04777001\",\r\n      \"city\": \"São Paulo\",\r\n      \"state\": \"SP\",\r\n      \"district\": \"Rua das Flores\",\r\n      \"street\": \"Avenida Interlagos\",\r\n      \"number\": \"100\",\r\n      \"complement\": \"de 4503 ao fim - lado ímpar\",\r\n      \"country\": \"Brasil\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/company",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cnpj 14 digitos",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "Authorization",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \"Empresa 1\",\r\n  \"registerCompany\": \"525417230001\",\r\n  \"mail\": \"empresa@test.com\",\r\n  \"matriz\": \"Teste\",\r\n  \"responsibleContact\": \"Marcia Silva\",\r\n  \"telephone\": \"99999999999998\",\r\n  \"serviceDescription\": \"Testes\",\r\n  \"address\": [\r\n    {\r\n      \"zipCode\": \"04777001\",\r\n      \"city\": \"São Paulo\",\r\n      \"state\": \"SP\",\r\n      \"district\": \"Rua das Flores\",\r\n      \"street\": \"Avenida Interlagos\",\r\n      \"number\": \"100\",\r\n      \"complement\": \"de 4503 ao fim - lado ímpar\",\r\n      \"country\": \"Brasil\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/company",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "razao social obrigatoria",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "Authorization",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \"Empresa 1\",\r\n  \"registerCompany\": \"12126456000188\",\r\n  \"mail\": \"empresa@test.com\",\r\n  \"matriz\": \"Teste\",\r\n  \"responsibleContact\": \"Marcia Silva\",\r\n  \"telephone\": \"99999999999998\",\r\n  \"serviceDescription\": \"\",\r\n  \"address\": [\r\n    {\r\n      \"zipCode\": \"04777001\",\r\n      \"city\": \"São Paulo\",\r\n      \"state\": \"SP\",\r\n      \"district\": \"Rua das Flores\",\r\n      \"street\": \"Avenida Interlagos\",\r\n      \"number\": \"100\",\r\n      \"complement\": \"de 4503 ao fim - lado ímpar\",\r\n      \"country\": \"Brasil\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/company",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "razao social alfanumerico",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "Authorization",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \"Empresa 1\",\r\n  \"registerCompany\": \"12126456000188\",\r\n  \"mail\": \"empresa@test.com\",\r\n  \"matriz\": \"Teste\",\r\n  \"responsibleContact\": \"Marcia Silva\",\r\n  \"telephone\": \"99999999999998\",\r\n  \"serviceDescription\": \"@#\",\r\n  \"address\": [\r\n    {\r\n      \"zipCode\": \"04777001\",\r\n      \"city\": \"São Paulo\",\r\n      \"state\": \"SP\",\r\n      \"district\": \"Rua das Flores\",\r\n      \"street\": \"Avenida Interlagos\",\r\n      \"number\": \"100\",\r\n      \"complement\": \"de 4503 ao fim - lado ímpar\",\r\n      \"country\": \"Brasil\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/company",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "razao duplicidade",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "Authorization",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \"Empresa 1\",\r\n  \"registerCompany\": \"12126456000188\",\r\n  \"mail\": \"empresa@test.com\",\r\n  \"matriz\": \"Teste\",\r\n  \"responsibleContact\": \"Marcia Silva\",\r\n  \"telephone\": \"99999999999998\",\r\n  \"serviceDescription\": \"Testes\",\r\n  \"address\": [\r\n    {\r\n      \"zipCode\": \"04777001\",\r\n      \"city\": \"São Paulo\",\r\n      \"state\": \"SP\",\r\n      \"district\": \"Rua das Flores\",\r\n      \"street\": \"Avenida Interlagos\",\r\n      \"number\": \"100\",\r\n      \"complement\": \"de 4503 ao fim - lado ímpar\",\r\n      \"country\": \"Brasil\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/company",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "razao max 100 caracteres",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "Authorization",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \"Empresa 1\",\r\n  \"registerCompany\": \"12126456000188\",\r\n  \"mail\": \"empresa@test.com\",\r\n  \"matriz\": \"Teste\",\r\n  \"responsibleContact\": \"Marcia Silva\",\r\n  \"telephone\": \"99999999999998\",\r\n  \"serviceDescription\": \"Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab\",\r\n  \"address\": [\r\n    {\r\n      \"zipCode\": \"04777001\",\r\n      \"city\": \"São Paulo\",\r\n      \"state\": \"SP\",\r\n      \"district\": \"Rua das Flores\",\r\n      \"street\": \"Avenida Interlagos\",\r\n      \"number\": \"100\",\r\n      \"complement\": \"de 4503 ao fim - lado ímpar\",\r\n      \"country\": \"Brasil\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/company",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "editar company",
+			"item": [
+				{
+					"name": "login_admin Copy 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response has token\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"token\");\r",
+									"});\r",
+									"\r",
+									"// Salva o token no ambiente\r",
+									"pm.environment.set(\"TOKEN\", pm.response.json().token);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"mail\": \"{{Admin}}\",\r\n  \"password\": \"{{PasswordAdmin}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "listar empresas Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code é 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/company",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cadastrar empresa Copy",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Função para gerar CNPJ fake (14 dígitos numéricos)\r",
+									"function gerarCNPJ() {\r",
+									"  let cnpj = '';\r",
+									"  for (let i = 0; i < 14; i++) {\r",
+									"    cnpj += Math.floor(Math.random() * 10);\r",
+									"  }\r",
+									"  return cnpj;\r",
+									"}\r",
+									"\r",
+									"// Define variáveis para cadastro da empresa\r",
+									"pm.environment.set(\"RegisterCompany\", gerarCNPJ());\r",
+									"pm.environment.set(\"corporateName\", \"Empresa Postmannn\");\r",
+									"pm.environment.set(\"mail\", \"contatopostman@empresateste.com\");\r",
+									"pm.environment.set(\"matriz\", \"Matriz2\");\r",
+									"pm.environment.set(\"responsibleContact\", \"Mariaana Silva\");\r",
+									"pm.environment.set(\"telephone\", \"5511999999995\");\r",
+									"pm.environment.set(\"serviceDescription\", \"Serviços gerais\");\r",
+									"\r",
+									"// Monta o endereço em formato array JSON e salva como string no environment\r",
+									"const endereco = [\r",
+									"  {\r",
+									"    zipCode: \"04777002\",\r",
+									"    street: \"Avenida Interlagos\",\r",
+									"    number: \"1234567891\",\r",
+									"    complement: \"Sala 101\",\r",
+									"    district: \"Jardim Marajoara\",\r",
+									"    city: \"SÃO PAULO\",\r",
+									"    state: \"SP\",\r",
+									"    country: \"BRASIL\"\r",
+									"  }\r",
+									"];\r",
+									"\r",
+									"pm.environment.set(\"Address\", JSON.stringify(endereco));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 Created\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"let jsonData;\r",
+									"try {\r",
+									"    jsonData = pm.response.json();\r",
+									"} catch(e) {\r",
+									"    pm.test(\"Response body is valid JSON\", () => { throw e; });\r",
+									"    return;\r",
+									"}\r",
+									"\r",
+									"// Novo objeto da empresa retornado\r",
+									"const company = jsonData.newCompany;\r",
+									"\r",
+									"// Salva o ID da empresa no ambiente\r",
+									"if (company && company._id) {\r",
+									"    pm.environment.set(\"companyID\", company._id);\r",
+									"    console.log(\"companyID salvo:\", company._id);\r",
+									"} else {\r",
+									"    console.warn(\"companyID não encontrado.\");\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Response contém ID da empresa\", function () {\r",
+									"    pm.expect(company).to.have.property(\"_id\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Corporate name corresponde\", function () {\r",
+									"    pm.expect(company.corporateName).to.eql(pm.environment.get(\"corporateName\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"CNPJ corresponde\", function () {\r",
+									"    pm.expect(company.registerCompany).to.eql(pm.environment.get(\"RegisterCompany\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Email corresponde\", function () {\r",
+									"    pm.expect(company.mail).to.eql(pm.environment.get(\"mail\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Matriz corresponde\", function () {\r",
+									"    pm.expect(company.matriz).to.eql(pm.environment.get(\"matriz\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Responsável corresponde\", function () {\r",
+									"    pm.expect(company.responsibleContact).to.eql(pm.environment.get(\"responsibleContact\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Telefone corresponde\", function () {\r",
+									"    pm.expect(company.telephone).to.eql(pm.environment.get(\"telephone\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Descrição corresponde\", function () {\r",
+									"    pm.expect(company.serviceDescription).to.eql(pm.environment.get(\"serviceDescription\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Endereço é array e possui dados\", function () {\r",
+									"    pm.expect(company.address).to.be.an(\"array\").that.is.not.empty;\r",
+									"});\r",
+									"\r",
+									"// Comparação dos dados de endereço\r",
+									"if (company.address && company.address.length > 0) {\r",
+									"    const enderecoResp = company.address[0];\r",
+									"    const enderecoEnv = JSON.parse(pm.environment.get(\"Address\"))[0];\r",
+									"\r",
+									"    pm.test(\"Endereço: CEP corresponde\", function () {\r",
+									"        pm.expect(enderecoResp.zipCode).to.eql(enderecoEnv.zipCode);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Endereço: Rua corresponde\", function () {\r",
+									"        pm.expect(enderecoResp.street).to.eql(enderecoEnv.street);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Endereço: Número corresponde\", function () {\r",
+									"        pm.expect(enderecoResp.number).to.eql(enderecoEnv.number);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Endereço: Complemento corresponde\", function () {\r",
+									"        pm.expect(enderecoResp.complement).to.eql(enderecoEnv.complement);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Endereço: Bairro corresponde\", function () {\r",
+									"        pm.expect(enderecoResp.district).to.eql(enderecoEnv.district);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Endereço: Cidade corresponde\", function () {\r",
+									"        pm.expect(enderecoResp.city).to.eql(enderecoEnv.city);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Endereço: Estado corresponde\", function () {\r",
+									"        pm.expect(enderecoResp.state).to.eql(enderecoEnv.state);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Endereço: País corresponde\", function () {\r",
+									"        pm.expect(enderecoResp.country).to.eql(enderecoEnv.country);\r",
+									"    });\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \"{{corporateName}}\",\r\n  \"registerCompany\": \"{{RegisterCompany}}\",\r\n  \"mail\": \"{{mail}}\",\r\n  \"matriz\": \"{{matriz}}\",\r\n  \"responsibleContact\": \"{{responsibleContact}}\",\r\n  \"telephone\": \"{{telephone}}\",\r\n  \"serviceDescription\": \"{{serviceDescription}}\",\r\n  \"address\": {{Address}}\r\n}\r\n\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/company",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "editar endereço",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const endereco = [\r",
+									"  {\r",
+									"    zipCode: \"0\" + Math.floor(1000000 + Math.random() * 8999999),  // Ex: 01234567\r",
+									"    city: \"SÃO PAULO\",\r",
+									"    state: \"SP\",\r",
+									"    district: \"Centro\",\r",
+									"    street: \"Rua Teste Automatizada\",\r",
+									"    number = Math.floor(1000000000 + Math.random() * 9000000000).toString();\r",
+									"\r",
+									"    complement: \"Sala \" + Math.floor(Math.random() * 10),\r",
+									"    country: \"BRASIL\"\r",
+									"  }\r",
+									"];\r",
+									"pm.environment.set(\"NewAddress\", JSON.stringify(endereco));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code é 200 - Atualização bem‑sucedida\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"let jsonData;\r",
+									"try {\r",
+									"    jsonData = pm.response.json();\r",
+									"} catch(e) {\r",
+									"    pm.test(\"Resposta deve ser JSON válido\", () => { throw e; });\r",
+									"    return;\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Contém mensagem de sucesso\", () => {\r",
+									"    pm.expect(jsonData).to.have.property(\"msg\").that.is.a(\"string\").and.contains(\"atualizada com sucesso\");\r",
+									"});\r",
+									"\r",
+									"// Verifica se o `newCompany.address[0]` bate com as variáveis de ambiente\r",
+									"const updated = jsonData.newCompany.address[0];\r",
+									"const expected = JSON.parse(pm.environment.get(\"NewAddress\"))[0];\r",
+									"\r",
+									"pm.test(\"CEP atualizado corretamente\", () => {\r",
+									"    pm.expect(updated.zipCode).to.eql(expected.zipCode);\r",
+									"});\r",
+									"pm.test(\"Cidade atualizada corretamente\", () => {\r",
+									"    pm.expect(updated.city).to.eql(expected.city);\r",
+									"});\r",
+									"pm.test(\"Estado atualizado corretamente\", () => {\r",
+									"    pm.expect(updated.state).to.eql(expected.state);\r",
+									"});\r",
+									"pm.test(\"Distrito atualizado corretamente\", () => {\r",
+									"    pm.expect(updated.district).to.eql(expected.district);\r",
+									"});\r",
+									"pm.test(\"Rua atualizada corretamente\", () => {\r",
+									"    pm.expect(updated.street).to.eql(expected.street);\r",
+									"});\r",
+									"pm.test(\"Número atualizado corretamente\", () => {\r",
+									"    pm.expect(updated.number).to.eql(expected.number);\r",
+									"});\r",
+									"pm.test(\"Complemento atualizado corretamente\", () => {\r",
+									"    pm.expect(updated.complement).to.eql(expected.complement);\r",
+									"});\r",
+									"pm.test(\"País atualizado corretamente\", () => {\r",
+									"    pm.expect(updated.country).to.eql(expected.country);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": {{NewAddress}}\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/company/address/{{companyID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company",
+								"address",
+								"{{companyID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "sem logradouro",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": {{NewAddress}}\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{URL}}/company/address/{{companyID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company",
+								"address",
+								"{{companyID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logradouro alfanumerico",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": {{NewAddress}}\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{URL}}/company/address/{{companyID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company",
+								"address",
+								"{{companyID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logradouro carac especiais",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const specialStreet = \"Rua João `da´ Silva - 1º Andar - Bloco A ª\";\r",
+									"\r",
+									"const newAddress = [\r",
+									"  {\r",
+									"    zipCode: \"0\" + Math.floor(1000000 + Math.random() * 8999999), // Ex: 01234567\r",
+									"    city: \"SÃO PAULO\",\r",
+									"    state: \"SP\",\r",
+									"    district: \"Centro\",\r",
+									"    street: specialStreet,\r",
+									"    number: Math.floor(1000000000 + Math.random() * 9000000000).toString(),\r",
+									"    complement: \"Sala \" + Math.floor(Math.random() * 10),\r",
+									"    country: \"BRASIL\"\r",
+									"  }\r",
+									"];\r",
+									"\r",
+									"pm.environment.set(\"NewAddress\", JSON.stringify(newAddress));\r",
+									"pm.environment.set(\"specialStreet\", specialStreet);  // <== Salva a variável!\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code é 200 ou 201 - Sucesso na edição\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r",
+									"});\r",
+									"\r",
+									"let jsonData;\r",
+									"try {\r",
+									"    jsonData = pm.response.json();\r",
+									"} catch (e) {\r",
+									"    pm.test(\"Resposta é um JSON válido\", () => { throw e; });\r",
+									"    return;\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Contém mensagem de sucesso\", () => {\r",
+									"    pm.expect(jsonData).to.have.property(\"msg\").that.contains(\"atualizado\");\r",
+									"});\r",
+									"\r",
+									"if (jsonData.updateCompany?.address?.length) {\r",
+									"    const street = jsonData.updateCompany.address[0].street;\r",
+									"    const esperado = pm.environment.get(\"specialStreet\");  // variável do pre-request\r",
+									"\r",
+									"    pm.test(\"Logradouro com caracteres especiais foi aceito\", () => {\r",
+									"        pm.expect(street).to.eql(esperado);\r",
+									"    });\r",
+									"} else {\r",
+									"    pm.test(\"Endereço ausente na resposta\", () => {\r",
+									"        throw new Error(\"Endereço não retornado\");\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": {{NewAddress}}\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{URL}}/company/address/{{companyID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company",
+								"address",
+								"{{companyID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logradouro max 50 caracteres",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const specialStreet = \"Rua João `da´ Silva - 1º Andar - Bloco A ª\";\r",
+									"\r",
+									"const newAddress = [\r",
+									"  {\r",
+									"    zipCode: \"0\" + Math.floor(1000000 + Math.random() * 8999999), // Ex: 01234567\r",
+									"    city: \"SÃO PAULO\",\r",
+									"    state: \"SP\",\r",
+									"    district: \"Centro\",\r",
+									"    street: specialStreet,\r",
+									"    number: Math.floor(1000000000 + Math.random() * 9000000000).toString(),\r",
+									"    complement: \"Sala \" + Math.floor(Math.random() * 10),\r",
+									"    country: \"BRASIL\"\r",
+									"  }\r",
+									"];\r",
+									"\r",
+									"pm.environment.set(\"NewAddress\", JSON.stringify(newAddress));\r",
+									"pm.environment.set(\"specialStreet\", specialStreet);  // <== Salva a variável!\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code é 200 ou 201 - Sucesso na edição\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r",
+									"});\r",
+									"\r",
+									"let jsonData;\r",
+									"try {\r",
+									"    jsonData = pm.response.json();\r",
+									"} catch (e) {\r",
+									"    pm.test(\"Resposta é um JSON válido\", () => { throw e; });\r",
+									"    return;\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Contém mensagem de sucesso\", () => {\r",
+									"    pm.expect(jsonData).to.have.property(\"msg\").that.contains(\"atualizado\");\r",
+									"});\r",
+									"\r",
+									"if (jsonData.updateCompany?.address?.length) {\r",
+									"    const street = jsonData.updateCompany.address[0].street;\r",
+									"    const esperado = pm.environment.get(\"specialStreet\");  // variável do pre-request\r",
+									"\r",
+									"    pm.test(\"Logradouro com caracteres especiais foi aceito\", () => {\r",
+									"        pm.expect(street).to.eql(esperado);\r",
+									"    });\r",
+									"} else {\r",
+									"    pm.test(\"Endereço ausente na resposta\", () => {\r",
+									"        throw new Error(\"Endereço não retornado\");\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": {{NewAddress}}\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{URL}}/company/address/{{companyID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company",
+								"address",
+								"{{companyID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "sem numero",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const newAddress = [\r",
+									"  {\r",
+									"    zipCode: \"0\" + Math.floor(1000000 + Math.random() * 8999999),  // Ex: 01234567\r",
+									"    city: \"PORTO ALEGRE\",\r",
+									"    state: \"RS\",\r",
+									"    district: \"Centro\",\r",
+									"    street: \"Rua Postman\",\r",
+									"\r",
+									"    complement: \"Sala \" + Math.floor(Math.random() * 10),\r",
+									"    country: \"BRASIL\"\r",
+									"  }\r",
+									"];\r",
+									"pm.environment.set(\"NewAddress\", JSON.stringify(newAddress));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code é 400 - Requisição inválida\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Mensagem de erro para campo número obrigatório\", () => {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"error\");\r",
+									"\r",
+									"    \r",
+									"    const hasNumeroError = jsonData.error.some(msg => msg.toLowerCase().includes(\"número\"));\r",
+									"    pm.expect(hasNumeroError).to.be.true;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": {{NewAddress}}\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{URL}}/company/address/{{companyID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company",
+								"address",
+								"{{companyID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "apenas numeros",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const newAddress = [\r",
+									"  {\r",
+									"    zipCode: \"0\" + Math.floor(1000000 + Math.random() * 8999999),  // Ex: 01234567\r",
+									"    city: \"PORTO ALEGRE\",\r",
+									"    state: \"RS\",\r",
+									"    district: \"Centro\",\r",
+									"    street: \"Rua Postman\",\r",
+									"    number: \"1234567ABC\",\r",
+									"\r",
+									"    complement: \"Sala \" + Math.floor(Math.random() * 10),\r",
+									"    country: \"BRASIL\"\r",
+									"  }\r",
+									"];\r",
+									"pm.environment.set(\"NewAddress\", JSON.stringify(newAddress));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code é 400 - Requisição inválida\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Mensagem de erro para número inválido\", () => {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"error\");\r",
+									"\r",
+									"    const hasNumeroFormatError = jsonData.error.some(msg =>\r",
+									"        msg.toLowerCase().includes(\"número\") || msg.toLowerCase().includes(\"apenas números\")\r",
+									"    );\r",
+									"\r",
+									"    pm.expect(hasNumeroFormatError).to.be.true;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": {{NewAddress}}\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{URL}}/company/address/{{companyID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company",
+								"address",
+								"{{companyID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "numeros mais 10 caracteres",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const newAddress = [\r",
+									"  {\r",
+									"    zipCode: \"0\" + Math.floor(1000000 + Math.random() * 8999999),  // Ex: 01234567\r",
+									"    city: \"PORTO ALEGRE\",\r",
+									"    state: \"RS\",\r",
+									"    district: \"Centro\",\r",
+									"    street: \"Rua Postman\",\r",
+									"\r",
+									"    complement: \"Sala \" + Math.floor(Math.random() * 10),\r",
+									"    country: \"BRASIL\"\r",
+									"  }\r",
+									"];\r",
+									"pm.environment.set(\"NewAddress\", JSON.stringify(newAddress));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code é 400 - Requisição inválida\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Mensagem de erro para campo numero obrigatório\", () => {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"error\");\r",
+									"    const hasLogradouroError = jsonData.error.some(msg => msg.includes(\"numero\"));\r",
+									"    pm.expect(hasLogradouroError).to.be.true;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": {{NewAddress}}\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{URL}}/company/address/{{companyID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company",
+								"address",
+								"{{companyID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "complemento nao obrigatorio",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const newAddress = [\r",
+									"  {\r",
+									"    zipCode: \"0\" + Math.floor(1000000 + Math.random() * 8999999),  // Ex: 01234567\r",
+									"    city: \"PORTO ALEGRE\",\r",
+									"    state: \"RS\",\r",
+									"    district: \"Centro\",\r",
+									"    street: \"Rua Postman\",\r",
+									"    number : Math.floor(1000000000 + Math.random() * 9000000000).toString(),\r",
+									"    country: \"BRASIL\"\r",
+									"  }\r",
+									"];\r",
+									"pm.environment.set(\"NewAddress\", JSON.stringify(newAddress));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code é 200 ou 201 - Sucesso sem complemento\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r",
+									"});\r",
+									"\r",
+									"let jsonData;\r",
+									"try {\r",
+									"    jsonData = pm.response.json();\r",
+									"} catch (e) {\r",
+									"    pm.test(\"Resposta é um JSON válido\", () => { throw e; });\r",
+									"    return;\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Contém mensagem de sucesso\", () => {\r",
+									"    pm.expect(jsonData).to.have.property(\"msg\").that.contains(\"atualizado\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Endereço foi atualizado mesmo sem complemento\", () => {\r",
+									"    const updated = jsonData.updateCompany?.address?.[0];\r",
+									"    pm.expect(updated).to.be.an(\"object\");\r",
+									"    pm.expect(updated).to.have.property(\"street\").that.is.a(\"string\").and.not.empty;\r",
+									"    pm.expect(updated).to.have.property(\"number\").that.is.a(\"string\").and.not.empty;\r",
+									"\r",
+									"    // complemento pode estar ausente ou nulo\r",
+									"    pm.expect(updated).to.not.have.property(\"complement\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": {{NewAddress}}\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{URL}}/company/address/{{companyID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company",
+								"address",
+								"{{companyID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "complemento alfanumerico",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const complemento = \"Bloco B Sala 101\";\r",
+									"pm.environment.set(\"ComplementValido\", complemento);\r",
+									"\r",
+									"const newAddress = [\r",
+									"  {\r",
+									"    zipCode: \"0\" + Math.floor(1000000 + Math.random() * 8999999),\r",
+									"    city: \"SÃO PAULO\",\r",
+									"    state: \"SP\",\r",
+									"    district: \"Centro\",\r",
+									"    street: \"Rua Teste Alfanumérica\",\r",
+									"    number: Math.floor(100000000 + Math.random() * 900000000).toString(),\r",
+									"    complement: complemento,\r",
+									"    country: \"BRASIL\"\r",
+									"  }\r",
+									"];\r",
+									"\r",
+									"pm.environment.set(\"NewAddress\", JSON.stringify(newAddress));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code é 200 ou 201 - Sucesso na edição\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r",
+									"});\r",
+									"\r",
+									"let jsonData;\r",
+									"try {\r",
+									"    jsonData = pm.response.json();\r",
+									"} catch (e) {\r",
+									"    pm.test(\"Resposta é um JSON válido\", () => { throw e; });\r",
+									"    return;\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Contém mensagem de sucesso\", () => {\r",
+									"    pm.expect(jsonData).to.have.property(\"msg\").that.contains(\"atualizado\");\r",
+									"});\r",
+									"\r",
+									"if (jsonData.updateCompany?.address?.length) {\r",
+									"    const complemento = jsonData.updateCompany.address[0].complement;\r",
+									"    const esperado = pm.environment.get(\"ComplementValido\");\r",
+									"\r",
+									"    pm.test(\"Complemento alfanumérico foi aceito\", () => {\r",
+									"        pm.expect(complemento).to.eql(esperado);\r",
+									"    });\r",
+									"} else {\r",
+									"    pm.test(\"Endereço ausente na resposta\", () => {\r",
+									"        throw new Error(\"Endereço não retornado\");\r",
+									"    });\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": {{NewAddress}}\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{URL}}/company/address/{{companyID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company",
+								"address",
+								"{{companyID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "complemento carac especiais",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const specialStreet = \"Rua João `da´ Silva - 1º Andar - Bloco A ª\";\r",
+									"\r",
+									"const newAddress = [\r",
+									"  {\r",
+									"    zipCode: \"0\" + Math.floor(1000000 + Math.random() * 8999999), // Ex: 01234567\r",
+									"    city: \"SÃO PAULO\",\r",
+									"    state: \"SP\",\r",
+									"    district: \"Centro\",\r",
+									"    street: specialStreet,\r",
+									"    number: Math.floor(1000000000 + Math.random() * 9000000000).toString(),\r",
+									"    complement: \"Sala \" + Math.floor(Math.random() * 10),\r",
+									"    country: \"BRASIL\"\r",
+									"  }\r",
+									"];\r",
+									"\r",
+									"pm.environment.set(\"NewAddress\", JSON.stringify(newAddress));\r",
+									"pm.environment.set(\"specialStreet\", specialStreet);  // <== Salva a variável!\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code é 200 ou 201 - Sucesso na edição\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r",
+									"});\r",
+									"\r",
+									"let jsonData;\r",
+									"try {\r",
+									"    jsonData = pm.response.json();\r",
+									"} catch (e) {\r",
+									"    pm.test(\"Resposta é um JSON válido\", () => { throw e; });\r",
+									"    return;\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Contém mensagem de sucesso\", () => {\r",
+									"    pm.expect(jsonData).to.have.property(\"msg\").that.contains(\"atualizado\");\r",
+									"});\r",
+									"\r",
+									"if (jsonData.updateCompany?.address?.length) {\r",
+									"    const street = jsonData.updateCompany.address[0].street;\r",
+									"    const esperado = pm.environment.get(\"specialStreet\");  // variável do pre-request\r",
+									"\r",
+									"    pm.test(\"Logradouro com caracteres especiais foi aceito\", () => {\r",
+									"        pm.expect(street).to.eql(esperado);\r",
+									"    });\r",
+									"} else {\r",
+									"    pm.test(\"Endereço ausente na resposta\", () => {\r",
+									"        throw new Error(\"Endereço não retornado\");\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": {{NewAddress}}\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{URL}}/company/address/{{companyID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company",
+								"address",
+								"{{companyID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "complemento max 80 caracteres",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const complementoLongo = \"Complemento muito longo que ultrapassa o limite permitido de 80 caracteres, contendo diversos detalhes e informações irrelevantes.\";\r",
+									"pm.environment.set(\"ComplementoLongo\", complementoLongo);\r",
+									"\r",
+									"const newAddress = [\r",
+									"  {\r",
+									"    zipCode: \"0\" + Math.floor(1000000 + Math.random() * 8999999),\r",
+									"    city: \"SÃO PAULO\",\r",
+									"    state: \"SP\",\r",
+									"    district: \"Centro\",\r",
+									"    street: \"Rua Teste Longo\",\r",
+									"    number: Math.floor(1000000000 + Math.random() * 9000000000).toString(),\r",
+									"    complement: complementoLongo,\r",
+									"    country: \"BRASIL\"\r",
+									"  }\r",
+									"];\r",
+									"\r",
+									"pm.environment.set(\"NewAddress\", JSON.stringify(newAddress));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code é 400 - Requisição inválida\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Mensagem de erro para complemento excedendo limite\", () => {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"error\");\r",
+									"\r",
+									"    const erroComplemento = jsonData.error.some(msg =>\r",
+									"        msg.includes(\"complement\") && msg.includes(\"máximo\") && msg.includes(\"80\")\r",
+									"    );\r",
+									"\r",
+									"    pm.expect(erroComplemento).to.be.true;\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": {{NewAddress}}\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{URL}}/company/address/{{companyID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company",
+								"address",
+								"{{companyID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "sem bairro",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									"const newAddress = [\r",
+									"  {\r",
+									"    zipCode: \"0\" + Math.floor(1000000 + Math.random() * 8999999),\r",
+									"    city: \"SÃO PAULO\",\r",
+									"    state: \"SP\",\r",
+									"    district: \"\",\r",
+									"    street: \"Rua Teste bairro\",\r",
+									"    number: Math.floor(1000000000 + Math.random() * 9000000000).toString(),\r",
+									"    complement: \"Sala \" + Math.floor(Math.random() * 10),\r",
+									"    country: \"BRASIL\"\r",
+									"  }\r",
+									"];\r",
+									"\r",
+									"pm.environment.set(\"NewAddress\", JSON.stringify(newAddress));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code é 400 - Bairro obrigatório\", () => {\r",
+									"  pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Mensagem de erro para bairro obrigatório\", () => {\r",
+									"  const jsonData = pm.response.json();\r",
+									"  const erroBairro = jsonData.error.some(msg => msg.toLowerCase().includes(\"bairro\") && msg.toLowerCase().includes(\"obrigatório\"));\r",
+									"  pm.expect(erroBairro).to.be.true;\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": {{NewAddress}}\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{URL}}/company/address/{{companyID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company",
+								"address",
+								"{{companyID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "bairro carac especiais",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const districtEspecial = \"Vila São João ºª -\";\r",
+									"pm.environment.set(\"DistrictEspecial\", districtEspecial);\r",
+									"\r",
+									"const newAddress = [\r",
+									"  {\r",
+									"    zipCode: \"0\" + Math.floor(1000000 + Math.random() * 8999999),\r",
+									"    city: \"SÃO PAULO\",\r",
+									"    state: \"SP\",\r",
+									"    district: districtEspecial,\r",
+									"    street: \"Rua test\",\r",
+									"    number: Math.floor(1000000000 + Math.random() * 9000000000).toString(),\r",
+									"    complement: \"Sala \" + Math.floor(Math.random() * 10),\r",
+									"    country: \"BRASIL\"\r",
+									"  }\r",
+									"];\r",
+									"\r",
+									"pm.environment.set(\"NewAddress\", JSON.stringify(newAddress));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code é 200 ou 201 - Sucesso\", () => {\r",
+									"  pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r",
+									"});\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Mensagem de sucesso\", () => {\r",
+									"  pm.expect(jsonData).to.have.property(\"msg\").that.contains(\"atualizado\");\r",
+									"});\r",
+									"\r",
+									"if (jsonData.updateCompany?.address?.length) {\r",
+									"  const bairro = jsonData.updateCompany.address[0].district;\r",
+									"  const esperado = pm.environment.get(\"DistrictEspecial\");\r",
+									"\r",
+									"  pm.test(\"Bairro com caracteres especiais aceito\", () => {\r",
+									"    pm.expect(bairro).to.eql(esperado);\r",
+									"  });\r",
+									"} else {\r",
+									"  pm.test(\"Endereço ausente na resposta\", () => {\r",
+									"    throw new Error(\"Endereço não retornado\");\r",
+									"  });\r",
+									"}\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": {{NewAddress}}\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{URL}}/company/address/{{companyID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company",
+								"address",
+								"{{companyID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "bairro alfanumerico",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const complementoLongo = \"Complemento muito longo que ultrapassa o limite permitido de 80 caracteres, contendo diversos detalhes e informações irrelevantes.\";\r",
+									"pm.environment.set(\"ComplementoLongo\", complementoLongo);\r",
+									"\r",
+									"const newAddress = [\r",
+									"  {\r",
+									"    zipCode: \"0\" + Math.floor(1000000 + Math.random() * 8999999),\r",
+									"    city: \"SÃO PAULO\",\r",
+									"    state: \"SP\",\r",
+									"    district: \"Centro\",\r",
+									"    street: \"Rua Teste Longo\",\r",
+									"    number: Math.floor(1000000000 + Math.random() * 9000000000).toString(),\r",
+									"    complement: complementoLongo,\r",
+									"    country: \"BRASIL\"\r",
+									"  }\r",
+									"];\r",
+									"\r",
+									"pm.environment.set(\"NewAddress\", JSON.stringify(newAddress));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code é 400 - Requisição inválida\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Mensagem de erro para complemento excedendo limite\", () => {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"error\");\r",
+									"\r",
+									"    const erroComplemento = jsonData.error.some(msg =>\r",
+									"        msg.includes(\"complement\") && msg.includes(\"máximo\") && msg.includes(\"80\")\r",
+									"    );\r",
+									"\r",
+									"    pm.expect(erroComplemento).to.be.true;\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": {{NewAddress}}\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{URL}}/company/address/{{companyID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company",
+								"address",
+								"{{companyID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "bairro mais 50 caracteres",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const districtLongo = \"Bairro que tem um nome muito extenso com mais de cinquenta caracteres\";\r",
+									"pm.environment.set(\"DistrictLongo\", districtLongo);\r",
+									"\r",
+									"const newAddress = [\r",
+									"  {\r",
+									"    zipCode: \"0\" + Math.floor(1000000 + Math.random() * 8999999),\r",
+									"    city: \"SÃO PAULO\",\r",
+									"    state: \"SP\",\r",
+									"    district: districtLongo,\r",
+									"    street: \"Rua bairro longo\",\r",
+									"    number: Math.floor(1000000000 + Math.random() * 9000000000).toString(),\r",
+									"    complement: \"Sala \" + Math.floor(Math.random() * 10),\r",
+									"    country: \"BRASIL\"\r",
+									"  }\r",
+									"];\r",
+									"\r",
+									"pm.environment.set(\"NewAddress\", JSON.stringify(newAddress));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code é 400 - Bairro excede limite\", () => {\r",
+									"  pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Mensagem de erro para bairro com mais de 50 caracteres\", () => {\r",
+									"  const jsonData = pm.response.json();\r",
+									"  const erroBairro = jsonData.error.some(msg =>\r",
+									"    msg.toLowerCase().includes(\"bairro\") && msg.toLowerCase().includes(\"50\")\r",
+									"  );\r",
+									"  pm.expect(erroBairro).to.be.true;\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": {{NewAddress}}\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{URL}}/company/address/{{companyID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company",
+								"address",
+								"{{companyID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "sem cidade",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									"const newAddress = [\r",
+									"  {\r",
+									"    zipCode: \"0\" + Math.floor(1000000 + Math.random() * 8999999),\r",
+									"    city: \"\",\r",
+									"    state: \"SP\",\r",
+									"    district: \"Vila Mariana\",\r",
+									"    street: \"Rua sem cidade\",\r",
+									"    number: Math.floor(1000000000 + Math.random() * 9000000000).toString(),\r",
+									"    complement: \"Sala \" + Math.floor(Math.random() * 10),\r",
+									"    country: \"BRASIL\"\r",
+									"  }\r",
+									"];\r",
+									"\r",
+									"pm.environment.set(\"NewAddress\", JSON.stringify(newAddress));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code é 400 - Cidade obrigatória\", () => {\r",
+									"  pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Mensagem de erro para cidade obrigatória\", () => {\r",
+									"  const jsonData = pm.response.json();\r",
+									"  const erroCidade = jsonData.error.some(msg => msg.toLowerCase().includes(\"cidade\") && msg.toLowerCase().includes(\"obrigatório\"));\r",
+									"  pm.expect(erroCidade).to.be.true;\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": {{NewAddress}}\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{URL}}/company/address/{{companyID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company",
+								"address",
+								"{{companyID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "apenas letras",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const cityOnlyLetters = \"Porto Alegre\";\r",
+									"pm.environment.set(\"CityOnlyLetters\", cityOnlyLetters);\r",
+									"\r",
+									"const newAddress = [\r",
+									"  {\r",
+									"    zipCode: \"0\" + Math.floor(1000000 + Math.random() * 8999999),  // Ex: 01234567\r",
+									"    city: cityOnlyLetters,\r",
+									"    state: \"RS\",\r",
+									"    district: \"Centro\",\r",
+									"    street: \"Rua Postman\",\r",
+									"    number: Math.floor(1000000000 + Math.random() * 9000000000).toString(),\r",
+									"    complement: \"Sala \" + Math.floor(Math.random() * 10),\r",
+									"    country: \"BRASIL\"\r",
+									"  }\r",
+									"];\r",
+									"pm.environment.set(\"NewAddress\", JSON.stringify(newAddress));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code é 200 ou 201 - Sucesso\", () => {\r",
+									"  pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r",
+									"});\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Mensagem de sucesso\", () => {\r",
+									"  pm.expect(jsonData).to.have.property(\"msg\").that.contains(\"atualizado\");\r",
+									"});\r",
+									"\r",
+									"if (jsonData.updateCompany?.address?.length) {\r",
+									"  const city = jsonData.updateCompany.address[0].city;\r",
+									"  const esperado = pm.environment.get(\"CityOnlyLetters\");\r",
+									"\r",
+									"  pm.test(\"Cidade com apenas letras foi aceita\", () => {\r",
+									"    pm.expect(city).to.eql(esperado);\r",
+									"  });\r",
+									"} else {\r",
+									"  pm.test(\"Endereço ausente na resposta\", () => {\r",
+									"    throw new Error(\"Endereço não retornado\");\r",
+									"  });\r",
+									"}\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": {{NewAddress}}\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{URL}}/company/address/{{companyID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company",
+								"address",
+								"{{companyID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cidade carac especiais",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const cityEspecial = \"São João da Serra ºª-\";\r",
+									"pm.environment.set(\"CityEspecial\", cityEspecial);\r",
+									"\r",
+									"const newAddress = [\r",
+									"  {\r",
+									"    zipCode: \"0\" + Math.floor(1000000 + Math.random() * 8999999), // Ex: 01234567\r",
+									"    city: cityEspecial,\r",
+									"    state: \"SP\",\r",
+									"    district: \"Centro\",\r",
+									"    street: \"Rua Robot\",\r",
+									"    number: Math.floor(1000000000 + Math.random() * 9000000000).toString(),\r",
+									"    complement: \"Sala \" + Math.floor(Math.random() * 10),\r",
+									"    country: \"BRASIL\"\r",
+									"  }\r",
+									"];\r",
+									"\r",
+									"pm.environment.set(\"NewAddress\", JSON.stringify(newAddress));\r",
+									"pm.environment.set(\"citySpecial\", cityEspecial);  // <== Salva a variável!\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code é 200 ou 201 - Sucesso\", () => {\r",
+									"  pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r",
+									"});\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Mensagem de sucesso\", () => {\r",
+									"  pm.expect(jsonData).to.have.property(\"msg\").that.contains(\"atualizado\");\r",
+									"});\r",
+									"\r",
+									"if (jsonData.updateCompany?.address?.length) {\r",
+									"  const city = jsonData.updateCompany.address[0].city;\r",
+									"  const esperado = pm.environment.get(\"CityEspecial\");\r",
+									"\r",
+									"  pm.test(\"Cidade com caracteres especiais foi aceita\", () => {\r",
+									"    pm.expect(city).to.eql(esperado);\r",
+									"  });\r",
+									"} else {\r",
+									"  pm.test(\"Endereço ausente na resposta\", () => {\r",
+									"    throw new Error(\"Endereço não retornado\");\r",
+									"  });\r",
+									"}\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": {{NewAddress}}\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{URL}}/company/address/{{companyID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company",
+								"address",
+								"{{companyID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cidade mais de 50 caract",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const cityLongo = \"Cidade que tem um nome muito extenso com mais de cinquenta caracteres\";\r",
+									"pm.environment.set(\"CityLongo\", cityLongo);\r",
+									"\r",
+									"const newAddress = [\r",
+									"  {\r",
+									"    zipCode: \"0\" + Math.floor(1000000 + Math.random() * 8999999),\r",
+									"    city: cityLongo,\r",
+									"    state: \"SP\",\r",
+									"    district: \"Vila Mariana\",\r",
+									"    street: \"Rua cidade longa\",\r",
+									"    number: Math.floor(1000000000 + Math.random() * 9000000000).toString(),\r",
+									"    complement: \"Sala \" + Math.floor(Math.random() * 10),\r",
+									"    country: \"BRASIL\"\r",
+									"  }\r",
+									"];\r",
+									"\r",
+									"pm.environment.set(\"NewAddress\", JSON.stringify(newAddress));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code é 400 - Cidade excede limite\", () => {\r",
+									"  pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Mensagem de erro para cidade com mais de 50 caracteres\", () => {\r",
+									"  const jsonData = pm.response.json();\r",
+									"  const erroCidade = jsonData.error.some(msg =>\r",
+									"    msg.toLowerCase().includes(\"cidade\") && msg.toLowerCase().includes(\"50\")\r",
+									"  );\r",
+									"  pm.expect(erroCidade).to.be.true;\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": {{NewAddress}}\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{URL}}/company/address/{{companyID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company",
+								"address",
+								"{{companyID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "sem estado",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const newAddress = [\r",
+									"  {\r",
+									"    zipCode: \"0\" + Math.floor(1000000 + Math.random() * 8999999),\r",
+									"    city: \"SAO PAULO\",\r",
+									"    state: \"\",\r",
+									"    district: \"Vila Mariana\",\r",
+									"    street: \"Rua sem cidade\",\r",
+									"    number: Math.floor(1000000000 + Math.random() * 9000000000).toString(),\r",
+									"    complement: \"Sala \" + Math.floor(Math.random() * 10),\r",
+									"    country: \"BRASIL\"\r",
+									"  }\r",
+									"];\r",
+									"\r",
+									"pm.environment.set(\"NewAddress\", JSON.stringify(newAddress));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code é 400 - Estado obrigatório\", () => {\r",
+									"  pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Mensagem de erro para estado obrigatório\", () => {\r",
+									"  const jsonData = pm.response.json();\r",
+									"  const erroEstado = jsonData.error.some(msg => msg.toLowerCase().includes(\"estado\") && msg.toLowerCase().includes(\"obrigatório\"));\r",
+									"  pm.expect(erroEstado).to.be.true;\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": {{NewAddress}}\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{URL}}/company/address/{{companyID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company",
+								"address",
+								"{{companyID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "apenas letras estado",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const stateOnlyLetters = \"RS\";\r",
+									"pm.environment.set(\"StateOnlyLetters\", stateOnlyLetters);\r",
+									"\r",
+									"const newAddress = [\r",
+									"  {\r",
+									"    zipCode: \"0\" + Math.floor(1000000 + Math.random() * 8999999),  // Ex: 01234567\r",
+									"    city: \"Porto Alegre\",\r",
+									"    state: stateOnlyLetters,\r",
+									"    district: \"Morro Santana\",\r",
+									"    street: \"Rua Postman\",\r",
+									"    number: Math.floor(1000000000 + Math.random() * 9000000000).toString(),\r",
+									"    complement: \"Sala \" + Math.floor(Math.random() * 10),\r",
+									"    country: \"BRASIL\"\r",
+									"  }\r",
+									"];\r",
+									"pm.environment.set(\"NewAddress\", JSON.stringify(newAddress));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code é 200 ou 201 - Sucesso\", () => {\r",
+									"  pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r",
+									"});\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Mensagem de sucesso\", () => {\r",
+									"  pm.expect(jsonData).to.have.property(\"msg\").that.contains(\"atualizado\");\r",
+									"});\r",
+									"\r",
+									"if (jsonData.updateCompany?.address?.length) {\r",
+									"  const state = jsonData.updateCompany.address[0].state;\r",
+									"  const esperado = pm.environment.get(\"StateOnlyLetters\");\r",
+									"\r",
+									"  pm.test(\"Estado com apenas letras foi aceito\", () => {\r",
+									"    pm.expect(state).to.eql(esperado);\r",
+									"  });\r",
+									"} else {\r",
+									"  pm.test(\"Endereço ausente na resposta\", () => {\r",
+									"    throw new Error(\"Endereço não retornado\");\r",
+									"  });\r",
+									"}\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": {{NewAddress}}\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{URL}}/company/address/{{companyID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company",
+								"address",
+								"{{companyID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "estado max 2 caracteres",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									"const newAddress = [\r",
+									"  {\r",
+									"    zipCode: \"0\" + Math.floor(1000000 + Math.random() * 8999999),\r",
+									"    city: \"Sao Paulo\",\r",
+									"    state: \"SPP\", //mais de 2 caracteres\r",
+									"    district: \"Vila Mariana\",\r",
+									"    street: \"Rua state invalido\",\r",
+									"    number: Math.floor(1000000000 + Math.random() * 9000000000).toString(),\r",
+									"    complement: \"Sala \" + Math.floor(Math.random() * 10),\r",
+									"    country: \"BRASIL\"\r",
+									"  }\r",
+									"];\r",
+									"\r",
+									"pm.environment.set(\"NewAddress\", JSON.stringify(newAddress));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code é 400 - Estado excede limite\", () => {\r",
+									"  pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Mensagem de erro para estado com mais de 2 caracteres\", () => {\r",
+									"  const jsonData = pm.response.json();\r",
+									"  const erroEstado = jsonData.error.some(msg =>\r",
+									"    msg.toLowerCase().includes(\"estado\") && msg.includes(\"2 caracteres\")\r",
+									"  );\r",
+									"  pm.expect(erroEstado).to.be.true;\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": {{NewAddress}}\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{URL}}/company/address/{{companyID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company",
+								"address",
+								"{{companyID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "sem país",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									"const newAddress = [\r",
+									"  {\r",
+									"    zipCode: \"0\" + Math.floor(1000000 + Math.random() * 8999999),\r",
+									"    city: \"Sao Paulo\",\r",
+									"    state: \"SP\",\r",
+									"    district: \"Vila Mariana\",\r",
+									"    street: \"Rua sem cidade\",\r",
+									"    number: Math.floor(1000000000 + Math.random() * 9000000000).toString(),\r",
+									"    complement: \"Sala \" + Math.floor(Math.random() * 10),\r",
+									"    country: \"\"\r",
+									"  }\r",
+									"];\r",
+									"\r",
+									"pm.environment.set(\"NewAddress\", JSON.stringify(newAddress));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code é 400 - País obrigatório\", () => {\r",
+									"  pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Mensagem de erro para país obrigatório\", () => {\r",
+									"  const jsonData = pm.response.json();\r",
+									"  const erroPais = jsonData.error.some(msg =>\r",
+									"    msg.toLowerCase().includes(\"país\") && msg.toLowerCase().includes(\"obrigatório\")\r",
+									"  );\r",
+									"  pm.expect(erroPais).to.be.true;\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": {{NewAddress}}\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{URL}}/company/address/{{companyID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company",
+								"address",
+								"{{companyID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "apenas letras país",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const countryOnlyLetters = \"Brasil\";\r",
+									"pm.environment.set(\"CountryOnlyLetters\", countryOnlyLetters);\r",
+									"\r",
+									"const newAddress = [\r",
+									"  {\r",
+									"    zipCode: \"0\" + Math.floor(1000000 + Math.random() * 8999999),  // Ex: 01234567\r",
+									"    city: \"Porto Alegre\",\r",
+									"    state: \"RS\",\r",
+									"    district: \"Morro Santana\",\r",
+									"    street: \"Rua Postman\",\r",
+									"    number: Math.floor(1000000000 + Math.random() * 9000000000).toString(),\r",
+									"    complement: \"Sala \" + Math.floor(Math.random() * 10),\r",
+									"    country: countryOnlyLetters\r",
+									"  }\r",
+									"];\r",
+									"pm.environment.set(\"NewAddress\", JSON.stringify(newAddress));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code é 200 ou 201 - Sucesso\", () => {\r",
+									"  pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r",
+									"});\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Mensagem de sucesso\", () => {\r",
+									"  pm.expect(jsonData).to.have.property(\"msg\").that.contains(\"atualizado\");\r",
+									"});\r",
+									"\r",
+									"if (jsonData.updateCompany?.address?.length) {\r",
+									"  const country = jsonData.updateCompany.address[0].country;\r",
+									"  const esperado = pm.environment.get(\"CountryOnlyLetters\");\r",
+									"\r",
+									"  pm.test(\"País com apenas letras foi aceito\", () => {\r",
+									"    pm.expect(country).to.eql(esperado);\r",
+									"  });\r",
+									"} else {\r",
+									"  pm.test(\"Endereço ausente na resposta\", () => {\r",
+									"    throw new Error(\"Endereço não retornado\");\r",
+									"  });\r",
+									"}\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": {{NewAddress}}\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{URL}}/company/address/{{companyID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company",
+								"address",
+								"{{companyID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "país max 50 caracteres",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									"const newAddress = [\r",
+									"  {\r",
+									"    zipCode: \"0\" + Math.floor(1000000 + Math.random() * 8999999),\r",
+									"    city: \"Sao Paulo\",\r",
+									"    state: \"SP\",\r",
+									"    district: \"Vila Mariana\",\r",
+									"    street: \"Rua state invalido\",\r",
+									"    number: Math.floor(1000000000 + Math.random() * 9000000000).toString(),\r",
+									"    complement: \"Sala \" + Math.floor(Math.random() * 10),\r",
+									"    country: \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"\r",
+									"  }\r",
+									"];\r",
+									"\r",
+									"pm.environment.set(\"NewAddress\", JSON.stringify(newAddress));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code é 400 - País excede limite\", () => {\r",
+									"  pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Mensagem de erro para país com mais de 50 caracteres\", () => {\r",
+									"  const jsonData = pm.response.json();\r",
+									"  const erroPais = jsonData.error.some(msg =>\r",
+									"    msg.toLowerCase().includes(\"país\") && msg.includes(\"50\")\r",
+									"  );\r",
+									"  pm.expect(erroPais).to.be.true;\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": {{NewAddress}}\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{URL}}/company/address/{{companyID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company",
+								"address",
+								"{{companyID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "sem CEP",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									"const newAddress = [\r",
+									"  {\r",
+									"    zipCode: \"\",\r",
+									"    city: \"SAO PAULO\",\r",
+									"    state: \"SP\",\r",
+									"    district: \"Vila Mariana\",\r",
+									"    street: \"Rua sem cidade\",\r",
+									"    number: Math.floor(1000000000 + Math.random() * 9000000000).toString(),\r",
+									"    complement: \"Sala \" + Math.floor(Math.random() * 10),\r",
+									"    country: \"BRASIL\"\r",
+									"  }\r",
+									"];\r",
+									"\r",
+									"pm.environment.set(\"NewAddress\", JSON.stringify(newAddress));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code é 400 - CEP obrigatório\", () => {\r",
+									"  pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Mensagem de erro para CEP obrigatório\", () => {\r",
+									"  const jsonData = pm.response.json();\r",
+									"  const erroCep = jsonData.error.some(msg =>\r",
+									"    msg.toLowerCase().includes(\"cep\") && msg.toLowerCase().includes(\"obrigatório\")\r",
+									"  );\r",
+									"  pm.expect(erroCep).to.be.true;\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": {{NewAddress}}\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{URL}}/company/address/{{companyID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company",
+								"address",
+								"{{companyID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "apenas numeros CEP",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const cepComLetras = \"01A45B7C\";\r",
+									"\r",
+									"const newAddress = [\r",
+									"  {\r",
+									"    zipCode: cepComLetras,\r",
+									"    city: \"SAO PAULO\",\r",
+									"    state: \"SP\",\r",
+									"    district: \"Vila Mariana\",\r",
+									"    street: \"Rua sem cidade\",\r",
+									"    number: Math.floor(1000000000 + Math.random() * 9000000000).toString(),\r",
+									"    complement: \"Sala \" + Math.floor(Math.random() * 10),\r",
+									"    country: \"BRASIL\"\r",
+									"  }\r",
+									"];\r",
+									"\r",
+									"pm.environment.set(\"NewAddress\", JSON.stringify(newAddress));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code é 400 - CEP inválido\", () => {\r",
+									"  pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Mensagem de erro para CEP com letras\", () => {\r",
+									"  const jsonData = pm.response.json();\r",
+									"  const erroCep = jsonData.error.some(msg =>\r",
+									"    msg.includes(\"CEP\") && msg.includes(\"números\")\r",
+									"  );\r",
+									"  pm.expect(erroCep).to.be.true;\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": {{NewAddress}}\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{URL}}/company/address/{{companyID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company",
+								"address",
+								"{{companyID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cep com mascara",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const cepComLetras = \"01A45B7C\";\r",
+									"\r",
+									"const newAddress = [\r",
+									"  {\r",
+									"    zipCode: cepComLetras,\r",
+									"    city: \"SAO PAULO\",\r",
+									"    state: \"SP\",\r",
+									"    district: \"Vila Mariana\",\r",
+									"    street: \"Rua sem cidade\",\r",
+									"    number: Math.floor(1000000000 + Math.random() * 9000000000).toString(),\r",
+									"    complement: \"Sala \" + Math.floor(Math.random() * 10),\r",
+									"    country: \"BRASIL\"\r",
+									"  }\r",
+									"];\r",
+									"\r",
+									"pm.environment.set(\"NewAddress\", JSON.stringify(newAddress));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code é 400 - CEP inválido\", () => {\r",
+									"  pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Mensagem de erro para CEP com letras\", () => {\r",
+									"  const jsonData = pm.response.json();\r",
+									"  const erroCep = jsonData.error.some(msg =>\r",
+									"    msg.includes(\"CEP\") && msg.includes(\"números\")\r",
+									"  );\r",
+									"  pm.expect(erroCep).to.be.true;\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": {{NewAddress}}\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{URL}}/company/address/{{companyID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"company",
+								"address",
+								"{{companyID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "{{TOKEN}}",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "Authorization",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

@@ -38,7 +38,7 @@ jobs:
  
       - name: Execute collection
 
-        run: newman run ./invictus.postman_collection.json -e Enviroment ERP.environment.json -g workspace.postman_globals.json -r htmlextra --reporter-htmlextra-export ./report.html
+        run: newman run ./invictus.postman_collection.json -e Enviroment.ERP.environment.json -g workspace.postman_globals.json -r htmlextra --reporter-htmlextra-export ./report.html
  
       - name: Archive production artifacts
 
